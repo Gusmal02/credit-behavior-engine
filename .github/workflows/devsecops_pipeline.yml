@@ -28,11 +28,11 @@ jobs:
         run: bandit -r . -c .bandit --format txt
         continue-on-error: true
 
-      - name: Generar datos sintéticos de prueba
+      - name: Generar datos
         run: python ci_data.py
 
-      - name: Entrenar modelos CI
+      - name: Entrenar modelos
         run: python ci_train.py
 
-      - name: Ejecutar pruebas unitarias
+      - name: Tests
         run: pytest tests/ -v
