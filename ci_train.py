@@ -33,11 +33,25 @@ class Net(nn.Module):
     def __init__(self):
         super().__init__()
         self.embedding = nn.Embedding(6, 4)
-        self.red = nn.Sequential(nn.Linear(21,64), nn.ReLU(), nn.Linear(64,1))
+        self.red = nn.Sequential(
+            nn.Linear(21, 128),
+            nn.BatchNorm1d(128),
+            nn.ReLU(),
+            nn.Dropout(0.4),
+            nn.Linear(128, 64),
+            nn.BatchNorm1d(64),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(64, 32),
+            nn.BatchNorm1d(32),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(32, 1),
+        )
     def forward(self, x, c):
         e = self.embedding(c.squeeze(1))
-        return self.red(torch.cat([x,e],dim=1)).squeeze(1)
+        return self.red(torch.cat([x, e], dim=1)).squeeze(1)
 
 model = Net()
-torch.save(model.state_dict(), 'models/credit_model_best.pth')
-print('Modelos CI listos')
+torch.save(model.state_dict(), "models/credit_model_best.pth")
+print("Modelos CI listos")
